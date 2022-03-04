@@ -27,6 +27,9 @@ const store = new Vuex.Store({
         SET_LINE_PROFILE(state, profile) {
             state.lineProfile = profile
         },
+        SET_LINE_ID(state, lineId) {
+            state.user.lineId = lineId
+        },
     },
     actions: {
         updateUser({ commit }, user) {
@@ -34,6 +37,9 @@ const store = new Vuex.Store({
         },
         updateLineProfile({ commit }, profile) {
             commit("SET_LINE_PROFILE", profile)
+        },
+        updateLineId({ commit }, lineId) {
+            commit("SET_LINE_ID", lineId)
         },
     },
 })
