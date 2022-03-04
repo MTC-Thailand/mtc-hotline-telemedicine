@@ -28,10 +28,15 @@
 </template>
 
 <script>
-import {collection, doc, getDocs, orderBy, query, updateDoc, where} from "firebase/firestore";
+import {collection, doc, getDocs, getDoc, orderBy, query, updateDoc, where} from "firebase/firestore";
 import {db} from "../firebase";
 import moment from "moment";
 import liff from "@line/liff";
+let line = require('@line/bot-sdk')
+
+const client = new line.Client({
+  channelAccessToken: '3z0YqDMze8+0xvmkXd4SrOIbPqZmmoInHLMFETLfXF8+wvdwc5kENVmd+eG+EMEYOyMLRtTAVo8Q/MePQYoKt6Z5y+iTsjeEJiUej4Lkg0DXs4s5KK4i4UsTONn+pEOTPE1eSvwSlDxC0N5ZcVrvNgdB04t89/1O/w1cDnyilFU='
+});
 
 moment.locale('th')
 
@@ -58,32 +63,54 @@ export default {
     }
   },
   methods: {
-    withdraw (recordId) {
+    async withdraw(recordId) {
       const recordRef = doc(db, 'records', recordId)
-      updateDoc(recordRef, {
-        staff: {}
-      }).then(()=>{
-        this.$buefy.toast.open({
-          message: "ถอนการรับตรวจแล้ว",
-          type: "is-success"
-        })
-        this.loadAsyncData()
+      let querySnap = await getDoc(recordRef)
+      this.$buefy.dialog.confirm({
+        message: "ท่านต้องการยืนยันการถอนการให้บริการหรือไม่",
+        onConfirm: () => {
+          updateDoc(recordRef, {
+            staff: {}
+          }).then(() => {
+            this.$buefy.toast.open({
+              message: "ถอนการรับตรวจแล้ว",
+              type: "is-success"
+            })
+            const textMessage = {
+              text: 'ขออภัย นักเทคนิคการแพทย์ได้ขอยกเลิกการให้บริการ กรุณารอนักเทคนิคการแพทย์รายใหม่',
+              type: 'text',
+            }
+            client.pushMessage(querySnap.data().lineId, textMessage)
+            this.loadAsyncData()
+          })
+        }
       })
     },
-    bookThis (recordId) {
+    async bookThis(recordId) {
       const recordRef = doc(db, 'records', recordId)
-      updateDoc(recordRef, {
-        staff: {
-          name: this.$store.state.user.name,
-          license: this.$store.state.user.license,
-          phone: this.$store.state.user.phone
+      let querySnap = await getDoc(recordRef)
+      this.$buefy.dialog.confirm({
+        message: "ท่านต้องการยืนยันการให้บริการหรือไม่",
+        onConfirm: () => {
+          updateDoc(recordRef, {
+            staff: {
+              name: this.$store.state.user.name,
+              license: this.$store.state.user.license,
+              phone: this.$store.state.user.phone
+            }
+          }).then(() => {
+            this.$buefy.toast.open({
+              message: "ลงวันตรวจเรียบร้อยแล้ว",
+              type: "is-success"
+            })
+            const textMessage = {
+              text: 'ระบบได้รับการยืนยันวันตรวจที่ท่านทำการนัดหมายจากนักเทคนิคการแพทย์แล้ว กรุณาตรวจสอบในรายการจองของท่านในระบบ',
+              type: 'text',
+            }
+            client.pushMessage(querySnap.data().lineId, textMessage)
+            this.loadAsyncData()
+          })
         }
-      }).then(()=>{
-        this.$buefy.toast.open({
-          message: "ลงวันตรวจเรียบร้อยแล้ว",
-          type: "is-success"
-        })
-        this.loadAsyncData()
       })
     },
     async loadAsyncData() {
