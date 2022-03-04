@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 class="title is-size-6 has-text-centered">ยินดีต้อนรับ {{ $store.getters.fullname }}</h1>
-    <h1 class="subtitle is-size-6 has-text-centered">กรุณาเลือกวันตรวจ</h1>
+    <h1 class="subtitle is-size-6 has-text-centered">กรุณาเลือกวันและเวลาตรวจ</h1>
     <b-field>
       <b-datetimepicker :mobile-native="true" is-medium locale="th" v-model="datetime" inline></b-datetimepicker>
     </b-field>
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import liff from "@line/liff";
 import {collection, getDocs, query, where, orderBy, addDoc} from "firebase/firestore";
 import moment from 'moment'
 import {db} from "../firebase";
@@ -97,42 +96,9 @@ export default {
       }
       this.loading = false
     },
-    async initializeLine () {
-      liff.init({liffId: '1656942599-wqV1b0La'}).then(async () => {
-        if (!liff.isInClient()) {
-          const userRef = collection(db, "users")
-          let q = query(userRef, where('lineId', '==', 'testaccount'))
-          let querySnapshot = await getDocs(q)
-          querySnapshot.forEach(doc=>{
-            this.$store.dispatch('updateUser', doc.data()).then(()=>{
-              this.loadAsyncData()
-            })
-          })
-        } else {
-          if (!liff.isLoggedIn()) {
-            liff.login()
-          }
-          liff.getProfile().then(async profile => {
-            await this.$store.dispatch('updateLineProfile', profile)
-            const userRef = collection(db, "users")
-            let q = query(userRef, where('lineId', '==', profile.userId))
-            let querySnapshot = await getDocs(q)
-            if (querySnapshot.empty) {
-              await this.$router.push({ name: 'Home' })
-            } else {
-              querySnapshot.forEach(doc=>{
-                this.$store.dispatch('updateUser', doc.data()).then(()=>{
-                  this.loadAsyncData()
-                })
-              })
-            }
-          })
-        }
-      })
-    }
   },
   mounted() {
-    this.initializeLine()
+    this.loadAsyncData()
   }
 }
 </script>

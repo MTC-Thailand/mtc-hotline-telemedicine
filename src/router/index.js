@@ -13,7 +13,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/',
+    path: '/records',
     name: 'Records',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -21,9 +21,14 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "about" */ '../views/Records.vue')
   },
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
+  },
+  {
+    path: '/user-form',
+    name: 'userForm',
+    component: () => import(/* webpackChunkName: "about" */ '../views/userForm.vue')
   }
 ]
 
