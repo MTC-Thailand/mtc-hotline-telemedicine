@@ -3,7 +3,7 @@
     <h1 class="title is-size-6 has-text-centered">ยินดีต้อนรับ {{ $store.getters.fullname }}</h1>
     <h1 class="subtitle is-size-6 has-text-centered">กรุณาเลือกวันตรวจ</h1>
     <b-field>
-      <b-datetimepicker is-medium locale="th" v-model="datetime" inline></b-datetimepicker>
+      <b-datetimepicker :mobile-native="true" is-medium locale="th" v-model="datetime" inline></b-datetimepicker>
     </b-field>
     <b-field class="is-grouped  is-grouped-centered">
       <b-button type="is-success" @click="book">จอง</b-button>
