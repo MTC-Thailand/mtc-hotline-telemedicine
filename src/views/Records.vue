@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+    <div class="has-text-centered">
+      <figure class="image is-inline-block is-96x96">
+        <img :src="$store.state.user.pictureUrl" class="is-rounded">
+      </figure>
+    </div>
     <h1 class="title is-size-6 has-text-centered">ยินดีต้อนรับ {{ $store.getters.fullname }}</h1>
     <h1 class="subtitle is-size-6 has-text-centered">กรุณาเลือกวันและเวลาตรวจ</h1>
     <b-field>
