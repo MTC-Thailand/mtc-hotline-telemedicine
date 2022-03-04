@@ -111,22 +111,22 @@ export default {
         } else {
           if (!liff.isLoggedIn()) {
             liff.login()
-            liff.getProfile().then(async profile => {
-              await this.$store.dispatch('updateLineProfile', profile)
-              const userRef = collection(db, "users")
-              let q = query(userRef, where('lineId', '==', profile.userId))
-              let querySnapshot = await getDocs(q)
-              if (querySnapshot.empty) {
-                await this.$router.push({ name: 'Home' })
-              } else {
-                querySnapshot.forEach(doc=>{
-                  this.$store.dispatch('updateUser', doc.data()).then(()=>{
-                    this.loadAsyncData()
-                  })
-                })
-              }
-            })
           }
+          liff.getProfile().then(async profile => {
+            await this.$store.dispatch('updateLineProfile', profile)
+            const userRef = collection(db, "users")
+            let q = query(userRef, where('lineId', '==', profile.userId))
+            let querySnapshot = await getDocs(q)
+            if (querySnapshot.empty) {
+              await this.$router.push({ name: 'Home' })
+            } else {
+              querySnapshot.forEach(doc=>{
+                this.$store.dispatch('updateUser', doc.data()).then(()=>{
+                  this.loadAsyncData()
+                })
+              })
+            }
+          })
         }
       })
     }
