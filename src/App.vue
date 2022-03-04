@@ -1,28 +1,24 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <section class="section">
+      <b-breadcrumb separator="has-bullet-separator" size="is-medium" align="is-centered">
+        <b-breadcrumb-item tag="router-link" to="/" active>หน้าแรก</b-breadcrumb-item>
+        <b-breadcrumb-item tag="router-link" to="/records">รายการจอง</b-breadcrumb-item>
+        <b-breadcrumb-item tag="router-link" to="/about">เกี่ยวกับ</b-breadcrumb-item>
+      </b-breadcrumb>
+    </section>
+    <section class="section">
+      <div class="container">
+        <router-view/>
+      </div>
+    </section>
   </div>
 </template>
-
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
 
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
