@@ -10,6 +10,8 @@ const store = new Vuex.Store({
             name: null,
             pictureUrl: null,
             title: null,
+            license: null,
+            phone: null,
         },
         lineProfile: {}
     },
@@ -24,7 +26,7 @@ const store = new Vuex.Store({
         },
         SET_LINE_PROFILE(state, profile) {
             state.lineProfile = profile
-        }
+        },
     },
     actions: {
         updateUser({ commit }, user) {
@@ -32,7 +34,7 @@ const store = new Vuex.Store({
         },
         updateLineProfile({ commit }, profile) {
             commit("SET_LINE_PROFILE", profile)
-        }
+        },
     },
 })
 

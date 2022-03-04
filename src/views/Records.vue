@@ -25,6 +25,7 @@
 import {collection, getDocs, query, where, orderBy, addDoc} from "firebase/firestore";
 import moment from 'moment'
 import {db} from "../firebase";
+import liff from "@line/liff";
 
 moment.locale('th')
 
@@ -52,6 +53,10 @@ export default {
           field: 'license',
           label: 'หมายเลขใบอนุญาต'
         },
+        {
+          field: 'staffPhone',
+          label: 'เบอร์ติดต่อ'
+        },
       ]
     }
   },
@@ -68,6 +73,8 @@ export default {
       let bookData = {
         lineId: this.$store.state.user.lineId,
         datetime: this.datetime,
+        fullname: this.$store.getters.fullname,
+        phone: this.$store.state.user.phone,
         bookDateTime: new Date(),
         confirmed: false,
         staff: {},
@@ -93,17 +100,45 @@ export default {
         if  (Object.keys(d.staff).length > 0) {
           d.staffName = d.staff.fullname
           d.license = d.staff.license
+          d.staffPhone = d.staff.phone
         } else {
           d.staffName = ''
           d.license = ''
+          d.staffPhone = ''
         }
         this.records.push(d)
       }
       this.loading = false
     },
   },
-  mounted() {
-    this.loadAsyncData()
+  async mounted() {
+    if (!liff.isInClient()) {
+      const userRef = collection(db, "users")
+      let q = query(userRef, where('lineId', '==', 'testaccount'))
+      let querySnapshot = await getDocs(q)
+      querySnapshot.forEach(doc => {
+        this.$store.dispatch('updateUser', doc.data())
+        this.loadAsyncData()
+      })
+    } else {
+      if (!liff.isLoggedIn()) {
+        liff.login()
+      }
+      liff.getProfile().then(async profile => {
+        await this.$store.dispatch('updateLineProfile', profile)
+        const userRef = collection(db, "users")
+        let q = query(userRef, where('lineId', '==', profile.userId))
+        let querySnapshot = await getDocs(q)
+        if (querySnapshot.empty) {
+          await this.$router.push({name: 'userForm'})
+        } else {
+          querySnapshot.forEach(doc => {
+            this.$store.dispatch('updateUser', doc.data())
+            this.loadAsyncData()
+          })
+        }
+      })
+    }
   }
 }
 </script>

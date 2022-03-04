@@ -29,7 +29,17 @@ Vue.use(VueRouter)
     path: '/user-form',
     name: 'userForm',
     component: () => import(/* webpackChunkName: "about" */ '../views/userForm.vue')
-  }
+  },
+  {
+    path: '/staff-form',
+    name: 'staffForm',
+    component: () => import(/* webpackChunkName: "about" */ '../views/staffForm.vue')
+  },
+    {
+      path: '/bookings',
+      name: 'bookings',
+      component: () => import(/* webpackChunkName: "about" */ '../views/bookings.vue')
+    },
 ]
 
 const router = new VueRouter({
