@@ -5,6 +5,7 @@
         <img :src="$store.state.user.pictureUrl" class="is-rounded">
       </figure>
     </div>
+    <b-loading :is-full-page="true" v-model="isLoading" :can-cancel="true"></b-loading>
     <h1 class="title is-size-6 has-text-centered">ยินดีต้อนรับ {{ $store.getters.fullname }}</h1>
     <h1 class="subtitle is-size-6 has-text-centered">กรุณาเลือกวันและเวลาตรวจ</h1>
     <b-field>
@@ -35,6 +36,7 @@ export default {
     return {
       records: [],
       loading: false,
+      isLoading: true,
       datetime: new Date(),
       columns: [
         {
@@ -98,7 +100,7 @@ export default {
         d.bookDateTime = moment(d.bookDateTime.toDate()).fromNow()
         d.id = doc.id
         if  (Object.keys(d.staff).length > 0) {
-          d.staffName = d.staff.fullname
+          d.staffName = d.staff.name
           d.license = d.staff.license
           d.staffPhone = d.staff.phone
         } else {
@@ -120,6 +122,7 @@ export default {
         this.$store.dispatch('updateUser', doc.data())
         this.loadAsyncData()
       })
+      this.isLoading = false
     } else {
       if (!liff.isLoggedIn()) {
         liff.login()
@@ -137,6 +140,7 @@ export default {
             this.loadAsyncData()
           })
         }
+        this.isLoading = false
       })
     }
   }

@@ -12,9 +12,6 @@
         <b-button :loading="saving" @click="saveData" type="is-primary">Submit</b-button>
       </div>
     </b-field>
-    <pre>
-    {{ $store.state.user }}
-  </pre>
   </div>
 </template>
 
@@ -40,13 +37,15 @@ export default {
       for (let document of querySnapshot.docs) {
         let d = document.data()
         if (this.password === d.password) {
-          updateDoc(doc(db, "staff", document.id), {lineId: this.$store.state.user.lineId}).then(()=>{
+          updateDoc(doc(db, "staff", document.id), {lineId: this.$store.state.lineProfile.userId}).then(()=>{
             this.$buefy.toast.open({
               message: "บันทึกข้อมูลเรียบร้อยแล้ว",
               type: "is-success",
               position: "is-top"
             })
             this.saving = false
+            this.$store.dispatch('updateUser', d)
+            this.$store.dispatch('updateLineId', this.$store.state.lineProfile.userId)
             this.$router.push({ name: "bookings" })
           })
         } else {

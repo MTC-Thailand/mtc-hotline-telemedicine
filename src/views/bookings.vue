@@ -21,22 +21,15 @@
         <b-button icon-left="times-circle" icon-pack="far" v-else type="is-danger" @click="withdraw(props.row.id)">ถอนตัว</b-button>
       </b-table-column>
     </b-table>
-    <pre>
-      {{ $store.state.user }}
-    </pre>
   </div>
 </template>
 
 <script>
+import axios from "axios"
 import {collection, doc, getDocs, getDoc, orderBy, query, updateDoc, where} from "firebase/firestore";
 import {db} from "../firebase";
 import moment from "moment";
 import liff from "@line/liff";
-let line = require('@line/bot-sdk')
-
-const client = new line.Client({
-  channelAccessToken: '3z0YqDMze8+0xvmkXd4SrOIbPqZmmoInHLMFETLfXF8+wvdwc5kENVmd+eG+EMEYOyMLRtTAVo8Q/MePQYoKt6Z5y+iTsjeEJiUej4Lkg0DXs4s5KK4i4UsTONn+pEOTPE1eSvwSlDxC0N5ZcVrvNgdB04t89/1O/w1cDnyilFU='
-});
 
 moment.locale('th')
 
@@ -76,11 +69,13 @@ export default {
               message: "ถอนการรับตรวจแล้ว",
               type: "is-success"
             })
-            const textMessage = {
-              text: 'ขออภัย นักเทคนิคการแพทย์ได้ขอยกเลิกการให้บริการ กรุณารอนักเทคนิคการแพทย์รายใหม่',
-              type: 'text',
-            }
-            client.pushMessage(querySnap.data().lineId, textMessage)
+            axios({
+              method: "post",
+              url: "https://mtc-hotline.herokuapp.com/book-confirm",
+              data: {
+                lineId: querySnap.data().lineId,
+                message:"ขออภัย นักเทคนิคการแพทย์ขอยกเลิกการให้บริการ โปรดรอระบบจัดหารายใหม่ให้ท่าน"}
+            })
             this.loadAsyncData()
           })
         }
@@ -103,11 +98,14 @@ export default {
               message: "ลงวันตรวจเรียบร้อยแล้ว",
               type: "is-success"
             })
-            const textMessage = {
-              text: 'ระบบได้รับการยืนยันวันตรวจที่ท่านทำการนัดหมายจากนักเทคนิคการแพทย์แล้ว กรุณาตรวจสอบในรายการจองของท่านในระบบ',
-              type: 'text',
-            }
-            client.pushMessage(querySnap.data().lineId, textMessage)
+            axios({
+              method: "post",
+              url: "https://mtc-hotline.herokuapp.com/book-confirm",
+              data: {
+                lineId: querySnap.data().lineId,
+                message: "ระบบได้รับการยืนยันจากนักเทคนิคการแพทย์สำหรับวันตรวจที่ท่านขอนัดหมายแล้ว"
+              }
+            })
             this.loadAsyncData()
           })
         }
@@ -141,6 +139,7 @@ export default {
       let q = query(userRef, where('lineId', '==', 'testaccount'))
       let querySnapshot = await getDocs(q)
       if (querySnapshot.empty) {
+        this.$store.dispatch('updateLineProfile', { userId: 'testaccount'})
         this.$router.push({ name: 'staffForm' })
       }
       querySnapshot.forEach(doc => {
