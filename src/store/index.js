@@ -7,6 +7,7 @@ const store = new Vuex.Store({
     state: {
         user: {
             lineId: null,
+            pid: null,
             name: null,
             pictureUrl: null,
             title: null,

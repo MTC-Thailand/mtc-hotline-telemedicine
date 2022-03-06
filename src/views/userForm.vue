@@ -8,6 +8,9 @@
       <b-field label="ชื่อ นามสกุล" type="is-danger" message="จำเป็น">
         <b-input v-model="name"></b-input>
       </b-field>
+      <b-field label="หมายเลขบัตรประชาชน" type="is-danger" message="จำเป็นสำหรับการลงทะเบียนในระบบหมอพร้อม">
+        <b-input v-model="pid"></b-input>
+      </b-field>
       <b-field label="เบอร์ติดต่อ" type="is-danger" message="จำเป็น">
         <b-input v-model="phone"></b-input>
       </b-field>
@@ -29,6 +32,7 @@ export default {
       title: null,
       name: null,
       phone: null,
+      pid: null,
     }
   },
   methods: {
@@ -37,6 +41,7 @@ export default {
       let newUser = {
         name: this.name,
         phone: this.phone,
+        pid: this.pid,
         lineId: this.$store.state.lineProfile.userId,
         title: this.title,
         pictureUrl: this.$store.state.lineProfile.pictureUrl
