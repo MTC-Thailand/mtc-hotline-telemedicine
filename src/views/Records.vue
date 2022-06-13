@@ -17,16 +17,39 @@
     <b-notification type="is-light is-warning">
       ท่านสามารถตรวจสอบใบอนุญาตของนักเทคนิคการแพทย์ได้ที่ <a href="http://www.mtc.or.th">www.mtc.or.th</a>
     </b-notification>
+    <b-notification type="is-light is-info">
+      โปรดศึกษาการเตรียมตัวก่อนทำการตรวจ <router-link :to="{ name: 'Preparation' }">หน้าเพจการเตรียมตัว</router-link>
+    </b-notification>
     <h1 class="title is-size-6 has-text-centered">ประวัติการจอง</h1>
-    <b-table :data="records" :columns="columns" :loading="loading"></b-table>
+    <b-table :data="records" :loading="loading">
+      <b-table-column field="datetime" label="วันที่ต้องการตรวจ" v-slot="props">
+        {{ props.row.datetime }}
+      </b-table-column>
+      <b-table-column field="bookDateTime" label="นัดหมายเมื่อ" v-slot="props">
+        {{ props.row.bookDateTime }}
+      </b-table-column>
+      <b-table-column field="staffName" label="นักเทคนิคการแพทย์" v-slot="props">
+        {{ props.row.staffName }}
+      </b-table-column>
+      <b-table-column field="license" label="หมายเลขใบอนุญาต" v-slot="props">
+        {{ props.row.license }}
+      </b-table-column>
+      <b-table-column field="staffPhone" label="เบอร์ติดต่อ" v-slot="props">
+        {{ props.row.staffPhone }}
+      </b-table-column>
+      <b-table-column field="delete" label="ยกเลิก" v-slot="props">
+        <button class="button is-danger" @click="cancel(props.row.id)">ยกเลิก</button>
+      </b-table-column>
+    </b-table>
   </div>
 </template>
 
 <script>
-import {collection, getDocs, query, where, orderBy, addDoc} from "firebase/firestore";
+import {collection, deleteDoc, getDocs, query, where, orderBy, addDoc, getDoc, doc} from "firebase/firestore";
 import moment from 'moment'
 import {db} from "../firebase";
 import liff from "@line/liff";
+import axios from "axios";
 
 moment.locale('th')
 
@@ -63,6 +86,30 @@ export default {
     }
   },
   methods: {
+    cancel (recordId) {
+      this.$buefy.dialog.confirm({
+        message: "ท่านต้องการยืนยันยกเลิกการนัดหมายหรือไม่",
+        onConfirm: async () => {
+          let docRef = doc(db, 'records', recordId)
+          let querySnapshot = await getDoc(docRef)
+          if (querySnapshot.exists) {
+            await deleteDoc(docRef)
+            axios({
+              method: "post",
+              url: "https://mtc-hotline.herokuapp.com/book-confirm",
+              data: {
+                lineId: querySnapshot.data().lineId,
+                message:"ขออภัย ผู้รับบริการขอยกเลิกการนัดหมาย กรุณาตรวจสอบข้อมูลของท่านอีกครั้ง"}
+            })
+            this.loadAsyncData()
+            this.$buefy.dialog.alert({
+              title: "ยกเลิกการนัดหมาย",
+              message: "ยกเลิกการนัดหมายเรียบร้อยแล้ว"
+            })
+          }
+        }
+      })
+    },
     alert () {
       this.$buefy.dialog.alert({
         title: 'บันทึกการจองเรียบร้อย',
@@ -75,6 +122,7 @@ export default {
       let bookData = {
         lineId: this.$store.state.user.lineId,
         datetime: this.datetime,
+        pid: this.$store.state.user.pid,
         fullname: this.$store.getters.fullname,
         phone: this.$store.state.user.phone,
         bookDateTime: new Date(),

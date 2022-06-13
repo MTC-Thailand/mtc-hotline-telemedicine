@@ -2,8 +2,8 @@
   <div id="app">
     <section class="section">
       <b-breadcrumb separator="has-bullet-separator" size="is-small" align="is-centered">
-        <b-breadcrumb-item tag="router-link" to="/records">รายการจอง</b-breadcrumb-item>
-        <b-breadcrumb-item tag="router-link" to="/about">การเตรียมตัว</b-breadcrumb-item>
+        <b-breadcrumb-item tag="router-link" :to="{ name: 'Records' }">รายการจอง</b-breadcrumb-item>
+        <b-breadcrumb-item tag="router-link" :to="{ name: 'Preparation' }">การเตรียมตัว</b-breadcrumb-item>
       </b-breadcrumb>
       <router-view/>
     </section>

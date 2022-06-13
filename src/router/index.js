@@ -35,10 +35,15 @@ Vue.use(VueRouter)
     name: 'staffForm',
     component: () => import(/* webpackChunkName: "about" */ '../views/staffForm.vue')
   },
+  {
+    path: '/bookings',
+    name: 'bookings',
+    component: () => import(/* webpackChunkName: "about" */ '../views/bookings.vue')
+  },
     {
-      path: '/bookings',
-      name: 'bookings',
-      component: () => import(/* webpackChunkName: "about" */ '../views/bookings.vue')
+      path: '/preparation',
+      name: 'Preparation',
+      component: () => import(/* webpackChunkName: "about" */ '../views/Preparation.vue')
     },
 ]
 

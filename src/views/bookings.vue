@@ -9,6 +9,9 @@
       <b-table-column field="fullname" label="ผู้รับบริการ" v-slot="props">
         {{ props.row.fullname }}
       </b-table-column>
+      <b-table-column field="pid" label="รหัสบัตรประชาชน" v-slot="props">
+        {{ props.row.pid }}
+      </b-table-column>
       <b-table-column field="phone" label="เบอร์ติดต่อ" v-slot="props">
         {{ props.row.phone }}
       </b-table-column>
