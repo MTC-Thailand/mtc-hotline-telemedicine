@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <h1 class="title has-text-centered is-size-4">กรุณากรอกอีเมลและรหัสผ่าน</h1>
-    <b-field label="E-mail">
-      <b-input type="email" v-model="email"></b-input>
+    <b-field label="หมายเทลข ท.น.">
+      <b-input type="text" v-model="license"></b-input>
     </b-field>
     <b-field label="Password">
       <b-input type="password" v-model="password"></b-input>
@@ -23,7 +23,7 @@ export default {
   name: "staffForm",
   data () {
     return {
-      email: "",
+      license: "",
       password: "",
       saving: false
     }
@@ -32,7 +32,7 @@ export default {
     async saveData() {
       this.saving = true
       const staffRef = collection(db, 'staff')
-      let q = query(staffRef, where('email', '==', this.email))
+      let q = query(staffRef, where('license', '==', this.license))
       let querySnapshot = await getDocs(q)
       for (let document of querySnapshot.docs) {
         let d = document.data()
