@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <h1 class="title has-text-centered is-size-4">กรุณากรอกอีเมลและรหัสผ่าน</h1>
-    <b-field label="หมายเทลข ท.น.">
+    <h1 class="title has-text-centered is-size-4">กรุณากรอกเลขท.น.และรหัสผ่าน</h1>
+    <b-field label="หมายเลข ท.น.">
       <b-input type="text" v-model="license"></b-input>
     </b-field>
     <b-field label="Password">
