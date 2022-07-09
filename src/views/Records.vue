@@ -78,8 +78,8 @@ export default {
               method: "post",
               url: "https://mtc-hotline.herokuapp.com/book-confirm",
               data: {
-                lineId: querySnapshot.data().lineId,
-                message:"ขออภัย ผู้รับบริการขอยกเลิกการนัดหมาย กรุณาตรวจสอบข้อมูลของท่านอีกครั้ง"}
+                lineId: querySnapshot.data().staff.lineId,
+                message:"ขออภัย " + querySnapshot.data().fullname + " ขอยกเลิกการนัดหมาย กรุณาตรวจสอบข้อมูลของท่านอีกครั้ง"}
             })
             this.loadAsyncData()
             this.$buefy.dialog.alert({
