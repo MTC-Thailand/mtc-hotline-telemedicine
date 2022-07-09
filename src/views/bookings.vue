@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       records: [],
-      loading: false,
+      loading: true,
       columns: [
         {
           field: 'datetime',
@@ -120,6 +120,7 @@ export default {
       const recordsRef = collection(db, 'records')
       let q = query(recordsRef)
       let querySnapshot = await getDocs(q, orderBy('datetime', 'desc'))
+      this.loading = false
       for (let doc of querySnapshot.docs) {
         let d = doc.data()
         d.datetime = moment(d.datetime.toDate()).format('lll')
@@ -132,7 +133,6 @@ export default {
           }
           this.records.push(d)
         }
-        this.loading = false
       }
     }
   },
