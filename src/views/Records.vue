@@ -6,21 +6,13 @@
       </figure>
     </div>
     <b-loading :is-full-page="true" v-model="isLoading" :can-cancel="true"></b-loading>
-    <h1 class="title is-size-6 has-text-centered">ยินดีต้อนรับ {{ $store.getters.fullname }}</h1>
-    <h1 class="subtitle is-size-6 has-text-centered">กรุณาเลือกวันและเวลาตรวจ</h1>
-    <b-field>
-      <b-datetimepicker :mobile-native="true" is-medium locale="th" v-model="datetime" inline></b-datetimepicker>
-    </b-field>
-    <b-field class="is-grouped  is-grouped-centered">
-      <b-button type="is-success" @click="book">จอง</b-button>
-    </b-field>
-    <b-notification type="is-light is-warning">
-      ท่านสามารถตรวจสอบใบอนุญาตของนักเทคนิคการแพทย์ได้ที่ <a href="http://www.mtc.or.th">www.mtc.or.th</a>
-    </b-notification>
+    <h1 class="title is-size-3 has-text-centered">ประวัติการจองของท่าน</h1>
     <b-notification type="is-light is-info">
       โปรดศึกษาการเตรียมตัวก่อนทำการตรวจ <router-link :to="{ name: 'Preparation' }">หน้าเพจการเตรียมตัว</router-link>
     </b-notification>
-    <h1 class="title is-size-6 has-text-centered">ประวัติการจอง</h1>
+    <b-notification type="is-light is-warning">
+      ท่านสามารถตรวจสอบใบอนุญาตของนักเทคนิคการแพทย์ได้ที่ <a href="http://www.mtc.or.th">www.mtc.or.th</a>
+    </b-notification>
     <b-table :data="records" :loading="loading">
       <b-table-column field="datetime" label="วันที่ต้องการตรวจ" v-slot="props">
         {{ props.row.datetime }}
@@ -41,6 +33,16 @@
         <button class="button is-danger" @click="cancel(props.row.id)">ยกเลิก</button>
       </b-table-column>
     </b-table>
+    <hr>
+    <h1 class="subtitle is-size-4 has-text-centered">กรุณาเลือกวันและเวลาตรวจ</h1>
+    <div class="has-text-centered">
+      <b-field>
+        <b-datetimepicker :mobile-native="true" is-medium locale="th" v-model="datetime" inline></b-datetimepicker>
+      </b-field>
+      <b-field class="is-grouped  is-grouped-centered">
+        <b-button type="is-success" @click="book">จอง</b-button>
+      </b-field>
+    </div>
   </div>
 </template>
 
@@ -61,28 +63,6 @@ export default {
       loading: false,
       isLoading: true,
       datetime: new Date(),
-      columns: [
-        {
-          field: 'datetime',
-          label: 'วันที่ตรวจ',
-        },
-        {
-          field: 'bookDateTime',
-          label: 'วันที่ทำการจอง'
-        },
-        {
-          field: 'staffName',
-          label: 'นักเทคนิคการแพทย์'
-        },
-        {
-          field: 'license',
-          label: 'หมายเลขใบอนุญาต'
-        },
-        {
-          field: 'staffPhone',
-          label: 'เบอร์ติดต่อ'
-        },
-      ]
     }
   },
   methods: {
@@ -127,6 +107,7 @@ export default {
         phone: this.$store.state.user.phone,
         bookDateTime: new Date(),
         confirmed: false,
+        cancelled: false,
         staff: {},
       }
       addDoc(recordsRef, bookData).then(()=>{

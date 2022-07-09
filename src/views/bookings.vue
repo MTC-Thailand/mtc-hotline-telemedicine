@@ -2,6 +2,7 @@
   <div class="container">
     <h1 class="title is-size-5 has-text-centered">{{ $store.state.user.name }}</h1>
     <h1 class="subtitle is-size-5 has-text-centered">ท.น.{{ $store.state.user.license }}</h1>
+    <h1 class="title has-text-centered has-text-info">รายการนัดหมาย</h1>
     <b-table :data="records" :loading="loading">
       <b-table-column field="datetime" label="วันที่ตรวจ" v-slot="props">
         {{ props.row.datetime }}
@@ -94,7 +95,8 @@ export default {
             staff: {
               name: this.$store.state.user.name,
               license: this.$store.state.user.license,
-              phone: this.$store.state.user.phone
+              phone: this.$store.state.user.phone,
+              lineId: this.$store.state.user.lineId
             }
           }).then(() => {
             this.$buefy.toast.open({
