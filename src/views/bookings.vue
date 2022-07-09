@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+    <div class="has-text-centered">
+      <figure class="image is-inline-block is-96x96">
+        <img :src="$store.state.user.pictureUrl" class="is-rounded">
+      </figure>
+    </div>
     <h1 class="title is-size-5 has-text-centered">{{ $store.state.user.name }}</h1>
     <h1 class="subtitle is-size-5 has-text-centered">ท.น.{{ $store.state.user.license }}</h1>
     <h1 class="title has-text-centered has-text-info">รายการนัดหมาย</h1>
