@@ -37,7 +37,11 @@ export default {
       for (let document of querySnapshot.docs) {
         let d = document.data()
         if (this.password === d.password) {
-          updateDoc(doc(db, "staff", document.id), {lineId: this.$store.state.lineProfile.userId}).then(()=>{
+          updateDoc(doc(db, "staff", document.id),
+              {
+                lineId: this.$store.state.lineProfile.userId,
+                pictureUrl: this.$store.state.lineProfile.pictureUrl
+              }).then(()=>{
             this.$buefy.toast.open({
               message: "บันทึกข้อมูลเรียบร้อยแล้ว",
               type: "is-success",
